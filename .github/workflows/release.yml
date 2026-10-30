@@ -7,7 +7,8 @@ name: Release
 # - Run it manually (workflow_dispatch) on the branch to release: the release is created for the commit
 #   that ran, and the v<version> tag is created at that commit if it does not exist yet.
 # - Or push a v<version> tag: the tag must match <Version> in the project file.
-# Packages are pushed to nuget.org only when the manual run opts in and NUGET_API_KEY is set.
+# Packages are pushed to nuget.org only when the manual run opts in. The push uses nuget.org Trusted
+# Publishing (GitHub OIDC): no API key is stored. Set it up once, see docs/wiki/Releasing.md.
 
 on:
   push:
@@ -20,7 +21,7 @@ on:
         type: boolean
         default: false
       publish_to_nuget:
-        description: "Also push the package to nuget.org (requires the NUGET_API_KEY secret)"
+        description: "Also push the package to nuget.org via Trusted Publishing (needs the NUGET_USER variable and a policy on nuget.org)"
         required: false
         type: boolean
         default: false
@@ -28,6 +29,7 @@ on:
 permissions:
   contents: write
   packages: write
+  id-token: write   # lets the job request the GitHub OIDC token used by nuget.org Trusted Publishing
 
 jobs:
   release:
@@ -119,13 +121,16 @@ jobs:
           --source "https://nuget.pkg.github.com/$GITHUB_REPOSITORY_OWNER/index.json" \
           --api-key "$GITHUB_TOKEN"
 
-    - name: Push to NuGet
+    - name: NuGet login (Trusted Publishing, OIDC to a short-lived API key)
       if: ${{ github.event_name == 'workflow_dispatch' && inputs.publish_to_nuget }}
-      env:
-        NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
+      id: nuget-login
+      uses: NuGet/login@v1
+      with:
+        user: ${{ vars.NUGET_USER }}
+
+    - name: Push to nuget.org
+      if: ${{ github.event_name == 'workflow_dispatch' && inputs.publish_to_nuget }}
       run: |
-        if [ -z "$NUGET_API_KEY" ]; then
-          echo "::error::publish_to_nuget was requested but the NUGET_API_KEY secret is not set"
-          exit 1
-        fi
-        dotnet nuget push "packages/*.nupkg" --skip-duplicate --source https://api.nuget.org/v3/index.json --api-key "$NUGET_API_KEY"
+        dotnet nuget push "packages/*.nupkg" --skip-duplicate \
+          --source https://api.nuget.org/v3/index.json \
+          --api-key "${{ steps.nuget-login.outputs.NUGET_API_KEY }}"
