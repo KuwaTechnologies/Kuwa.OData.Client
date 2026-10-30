@@ -1,0 +1,1 @@
+Kuwa.OData.Client 7 · package `Kuwa.OData.Client` · [Releases](https://github.com/KuwaTechnologies/Kuwa.OData.Client/releases) · [Issues](https://github.com/KuwaTechnologies/Kuwa.OData.Client/issues) · This wiki is generated from `docs/wiki` in the repository; edit it there.

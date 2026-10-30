@@ -1,0 +1,41 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<RootNamespace>Kuwa.OData.Client</RootNamespace>
+		<AssemblyName>Kuwa.OData.Client</AssemblyName>
+		<PackageId>Kuwa.OData.Client</PackageId>
+		<Version>7.0.0</Version>
+		<Title>Kuwa.OData.Client</Title>
+		<Summary>A metadata-driven OData V4 / V4.01 client for .NET 10 that needs no generated proxy classes.</Summary>
+		<Description>
+			Kuwa.OData.Client is a metadata-driven OData V4 and V4.01 client for .NET 10. It reads the service metadata
+			and lets you query and modify OData services through a fluent, typed, dictionary-based or dynamic API without
+			generating proxy classes. Supports $filter/$select/$expand/$orderby/$search/$compute/$apply, server-driven
+			paging, delta queries, batch (multipart and JSON), functions and actions, media streams, ETags and
+			asynchronous requests.
+
+			Commonly used types:
+			Kuwa.OData.Client.ODataClient
+			Kuwa.OData.Client.ODataClientSettings
+			Kuwa.OData.Client.ODataBatch
+		</Description>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<PackageReleaseNotes>See https://github.com/KuwaTechnologies/Kuwa.OData.Client/releases</PackageReleaseNotes>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.OData.Core" />
+		<PackageReference Include="Microsoft.OData.Edm" />
+		<PackageReference Include="Microsoft.Spatial" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<InternalsVisibleTo Include="Kuwa.OData.Client.Tests" Key="$(StrongNamePublicKey.Replace('PublicKey=', ''))" />
+		<InternalsVisibleTo Include="Kuwa.OData.Client.Benchmarks" Key="$(StrongNamePublicKey.Replace('PublicKey=', ''))" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Include="README.md" Pack="true" PackagePath="\" />
+	</ItemGroup>
+
+</Project>

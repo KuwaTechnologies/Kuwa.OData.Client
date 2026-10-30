@@ -1,0 +1,95 @@
+<Project>
+
+	<!-- Project classification -->
+	<PropertyGroup>
+		<IsPrimaryProject Condition="'$(MSBuildProjectName)' == 'Kuwa.OData.Client'">true</IsPrimaryProject>
+		<IsTestProject Condition="$(MSBuildProjectName.EndsWith('.Tests')) Or $(MSBuildProjectName.EndsWith('.Tests.Integration'))">true</IsTestProject>
+		<IsTestSupportProject Condition="$(MSBuildProjectName.EndsWith('.Tests.TestServer'))">true</IsTestSupportProject>
+		<IsBenchmarkProject Condition="$(MSBuildProjectName.EndsWith('.Benchmarks'))">true</IsBenchmarkProject>
+	</PropertyGroup>
+
+	<!-- Compilation -->
+	<PropertyGroup>
+		<TargetFramework>net10.0</TargetFramework>
+		<LangVersion>14</LangVersion>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<AnalysisLevel>latest-recommended</AnalysisLevel>
+		<EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+		<Deterministic>true</Deterministic>
+		<ContinuousIntegrationBuild Condition="'$(GITHUB_ACTIONS)' == 'true'">true</ContinuousIntegrationBuild>
+		<ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+		<ChecksumAlgorithm>SHA256</ChecksumAlgorithm>
+		<NeutralLanguage>en-US</NeutralLanguage>
+		<SatelliteResourceLanguages>en</SatelliteResourceLanguages>
+		<AccelerateBuildsInVisualStudio>true</AccelerateBuildsInVisualStudio>
+	</PropertyGroup>
+
+	<!-- Package metadata (applies to the packable project) -->
+	<PropertyGroup>
+		<Product>Kuwa.OData.Client</Product>
+		<Authors>Kuwa Technologies</Authors>
+		<Company>Kuwa Technologies</Company>
+		<Copyright>Copyright © 2012-2026 Kuwa Technologies and contributors. Licensed under the MIT License.</Copyright>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<PackageIcon>kuwa-odata-client.png</PackageIcon>
+		<PackageProjectUrl>https://github.com/KuwaTechnologies/Kuwa.OData.Client</PackageProjectUrl>
+		<RepositoryUrl>https://github.com/KuwaTechnologies/Kuwa.OData.Client</RepositoryUrl>
+		<RepositoryType>git</RepositoryType>
+		<PackageTags>odata;odata-v4;odata-client;kuwaodata</PackageTags>
+		<PublishRepositoryUrl>true</PublishRepositoryUrl>
+		<EmbedUntrackedSources>true</EmbedUntrackedSources>
+		<IncludeSymbols>true</IncludeSymbols>
+		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
+		<DebugType>portable</DebugType>
+	</PropertyGroup>
+
+	<!-- Strong naming -->
+	<PropertyGroup>
+		<SignAssembly>true</SignAssembly>
+		<AssemblyOriginatorKeyFile>$(MSBuildThisFileDirectory)Kuwa.OData.Client.snk</AssemblyOriginatorKeyFile>
+		<StrongNamePublicKey>PublicKey=00240000048000001401000006020000002400005253413100080000010001005b01de55771eb7ba3ccd3b3822d8cd3f10f39a4f673096edeb6159bcd5285741ced78e5bd8f7fc4deadd48f353197f8ff0882ec0118831e03afcb2e15d7b60d5d8285c3ed020d21dc9f4ed3a1fb1c2221aa6d8a95cf932bb3ee9db309709f91ab516f5ede1693b7504ed02ac5c6186dd5223ced580583afa26c3595015f954863414719f18595d505837ffe45488656917fa92e71187b62fa0c3dc01d54e9699a927a655b3126d94f0e3de7e649f2a3ca617a2fe797609afcf5025955738c25f94c62af765bdad6c133132ea22f79a10f6153c0062e0691ad610be2c507800b7a24172bffaa0befd669bca3f9ddb94b5745af66c492e451b76221c6a7ef033aa</StrongNamePublicKey>
+	</PropertyGroup>
+
+	<!-- Primary (shipped) project -->
+	<PropertyGroup Condition="'$(IsPrimaryProject)' == 'true'">
+		<IsPackable>true</IsPackable>
+		<GenerateDocumentationFile>true</GenerateDocumentationFile>
+		<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+		<IsTrimmable>false</IsTrimmable>
+		<IsAotCompatible>false</IsAotCompatible>
+	</PropertyGroup>
+
+	<!-- Everything else -->
+	<PropertyGroup Condition="'$(IsPrimaryProject)' != 'true'">
+		<IsPackable>false</IsPackable>
+		<GenerateDocumentationFile>false</GenerateDocumentationFile>
+	</PropertyGroup>
+
+	<!-- Test projects -->
+	<PropertyGroup Condition="'$(IsTestProject)' == 'true'">
+		<NoWarn>$(NoWarn);CA1001;CA1031;CA1062;CA1303;CA1304;CA1305;CA1307;CA1309;CA1311;CA1707;CA1711;CA1716;CA1720;CA1806;CA1812;CA1816;CA1822;CA1825;CA1859;CA1861;CA1862;CA2000;CA2007;CA2227;CA2234;CA2263;CA5394;IDE0005;xUnit1004;xUnit1051</NoWarn>
+		<OutputType>Exe</OutputType>
+		<RollForward>Major</RollForward>
+		<UseMicrosoftTestingPlatformRunner>true</UseMicrosoftTestingPlatformRunner>
+		<TestingPlatformDotnetTestSupport>true</TestingPlatformDotnetTestSupport>
+		<TestingPlatformCaptureOutput>false</TestingPlatformCaptureOutput>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(IsTestSupportProject)' == 'true' Or '$(IsBenchmarkProject)' == 'true'">
+		<NoWarn>$(NoWarn);CA1001;CA1031;CA1062;CA1303;CA1305;CA1307;CA1309;CA1707;CA1711;CA1716;CA1720;CA1806;CA1812;CA1816;CA1822;CA1825;CA1861;CA1862;CA2000;CA2007;CA2227;CA2234;CA5394</NoWarn>
+	</PropertyGroup>
+
+	<ItemGroup Condition="'$(IsTestProject)' == 'true'">
+		<PackageReference Include="xunit.v3" />
+		<PackageReference Include="xunit.runner.visualstudio" PrivateAssets="all" />
+		<PackageReference Include="AwesomeAssertions" />
+		<Using Include="Xunit" />
+		<Using Include="AwesomeAssertions" />
+	</ItemGroup>
+
+	<ItemGroup Condition="'$(IsPrimaryProject)' == 'true'">
+		<None Include="$(MSBuildThisFileDirectory)kuwa-odata-client.png" Pack="true" PackagePath="\" Visible="false" />
+	</ItemGroup>
+
+</Project>

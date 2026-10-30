@@ -1,0 +1,40 @@
+name: CI Build & Package
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ "main", "master" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Get current time
+      id: build_date
+      run: echo "date=$(date -u +%Y%m%d-%H%M%S)" >> "$GITHUB_OUTPUT"
+
+    - uses: actions/checkout@v4
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 10.0.x
+
+    - name: Restore
+      run: dotnet restore src/Kuwa.OData.Client.slnx
+
+    - name: Build
+      run: dotnet build src/Kuwa.OData.Client.slnx --no-restore --configuration Release /p:Version="${{ vars.CI_VERSION_MAJORMINOR }}-ci-${{ steps.build_date.outputs.date }}"
+
+    - name: Test
+      run: dotnet test src/Kuwa.OData.Client.slnx --no-build --configuration Release
+
+    - name: Pack
+      run: dotnet pack src/Kuwa.OData.Client/Kuwa.OData.Client.csproj --no-build --configuration Release --output packages /p:Version="${{ vars.CI_VERSION_MAJORMINOR }}-ci-${{ steps.build_date.outputs.date }}"
+
+    - name: Upload packages
+      uses: actions/upload-artifact@v4
+      with:
+        name: nuget-packages
+        path: packages

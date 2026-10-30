@@ -1,0 +1,13 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="Kuwa.OData.Client/Kuwa.OData.Client.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="Kuwa.OData.Client.Tests/Kuwa.OData.Client.Tests.csproj" />
+    <Project Path="Kuwa.OData.Client.Tests.TestServer/Kuwa.OData.Client.Tests.TestServer.csproj" />
+    <Project Path="Kuwa.OData.Client.Tests.Integration/Kuwa.OData.Client.Tests.Integration.csproj" />
+  </Folder>
+  <Folder Name="/benchmarks/">
+    <Project Path="Kuwa.OData.Client.Benchmarks/Kuwa.OData.Client.Benchmarks.csproj" />
+  </Folder>
+</Solution>
