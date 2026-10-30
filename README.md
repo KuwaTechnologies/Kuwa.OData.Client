@@ -261,7 +261,7 @@ Microsoft.AspNetCore.OData and hosted on `TestServer`; no sockets are opened. Be
 
 ## Migrating from Simple.OData.Client 6.x
 
-- One package (`Kuwa.OData.Client`), `net10.0` only, OData V4/V4.01 only. `Kuwa.OData.Client.Core` and the
+- One package (`Kuwa.OData.Client`), `net10.0` only, OData V4/V4.01 only. `Simple.OData.Client.Core` and the
   `V3`/`V4` adapter packages no longer exist; V1–V3 services are not supported.
 - Removed: `ODataClientSettings.PayloadFormat`, `RenewHttpConnection`, `AdapterFactory`, `UseAbsoluteReferenceUris`;
   `WithExtensions()` (call `Apply` directly); `ODataNameMatchResolver.Alpahumeric` is now `ODataNameMatchResolver.Alphanumeric`.
